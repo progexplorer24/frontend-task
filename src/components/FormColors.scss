@@ -19,7 +19,7 @@ $sm: 640px;
 
 .input {
   appearance: none;
-  width: 80%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   color: rgba(17, 24, 39, 1);
@@ -60,4 +60,34 @@ $sm: 640px;
   font-weight: 300;
   font-size: 0.875rem;
   letter-spacing: 0.05em;
+}
+
+.rect {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+}
+
+.hex-name {
+  color: rgb(148, 163, 184);
+  font-size: 1rem;
+  font-weight: 400;
+
+}
+
+.hex-value {
+  color: white;
+  font-size: 1.25;
+  font-weight: 700;
+  margin-left: 0.5rem;
+}
+
+.color-item {
+  border-bottom-width: 1px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-color: rgb(55, 65, 81);
+  border-style: solid;
+  box-sizing: border-box;
 }
