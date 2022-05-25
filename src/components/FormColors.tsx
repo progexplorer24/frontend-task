@@ -46,24 +46,22 @@ type ColorParsed = {
   isRemovable: boolean
 }
 
-const useLocalStorage = <T,>(key: string, initialValue: T): ReturnType<T[]> => {
+const predefinedColorList: ColorObject[] = [{color: "#F87171", isRemovable: false}, {color: "#FB923C", isRemovable: false},  {color: "#F59E0B", isRemovable: false}, {color: "#14B8A6", isRemovable: false}]
+const parsedColorList: ColorParsed[] = predefinedColorList.map(el => {
+  return {
+    color: hexToRgb(el.color),
+    isRemovable: el.isRemovable
+  }
+})
 
-  const predefinedColorList: ColorObject[] = [{color: "#F87171", isRemovable: false}, {color: "#FB923C", isRemovable: false},  {color: "#F59E0B", isRemovable: false}, {color: "#14B8A6", isRemovable: false}]
-  const toNumbersArray: ColorParsed[] = predefinedColorList.map(el => {
-    return {
-      color: hexToRgb(el.color),
-      isRemovable: el.isRemovable
-    }
-  })
-  console.log(toNumbersArray)
-  console.log(sortColorsArray(toNumbersArray))
-  const [state, setState] = useState<T[]>(() => {
-    if(!initialValue) return sortColorsArray(toNumbersArray);
+const useLocalStorage = (key: string, initialValue: string): ReturnType<ColorParsed[]> => {
+  const initialArray = initialValue === '' ? parsedColorList : initialValue
+  const [state, setState] = useState<ColorParsed[]>(() => {
     try {
       const value = localStorage.getItem(key)
-      return value ? JSON.parse(value) : initialValue
+      return value ? JSON.parse(value) : initialArray
     } catch (error) {
-      return initialValue;
+      return initialArray;
     }
   });
 
@@ -85,7 +83,6 @@ const useLocalStorage = <T,>(key: string, initialValue: T): ReturnType<T[]> => {
 
 
 const FormColors: FC<FormColorsProps> = ({ children }) => {
-
   const [state, setState] = useLocalStorage('colors', localStorage.getItem('colors') || '')
 
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
@@ -94,8 +91,13 @@ const FormColors: FC<FormColorsProps> = ({ children }) => {
     const formElements = form.elements as typeof form.elements & {
       rgb: {value: string}
     }
-    console.log(formElements.rgb.value)
-    setState(prev => [formElements.rgb.value, ...prev])
+
+    const newColor = {
+      color: hexToRgb(formElements.rgb.value),
+      isRemovable: true
+    }
+
+    setState(prev => sortColorsArray([newColor, ...prev]))
   }
 
   // const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -115,10 +117,10 @@ const FormColors: FC<FormColorsProps> = ({ children }) => {
 
   };
 
-  const renderColorList = (colorList: Array<string>) => colorList.map((element, i) => 
+  const renderColorList = (colorList: ColorParsed[]) => colorList.map((element, i) => 
   <div key={i} className="color-item">
-    <div className="rect" style={{backgroundColor: element}} />
-    <p className="hex-name">Hex Value: <span className="hex-value">{element.toUpperCase()}</span></p>
+    <div className="rect" style={{backgroundColor: rgbToHex(element.color[0], element.color[1], element.color[2])}} />
+    <p className="hex-name">Hex Value: <span className="hex-value">{rgbToHex(element.color[0], element.color[1], element.color[2]).toUpperCase()}</span></p>
   </div>) 
   return (
     <>
@@ -126,7 +128,7 @@ const FormColors: FC<FormColorsProps> = ({ children }) => {
       <p className="paragraph">Please fill in the in RGB format. Start with '#' character. <br /> Then provide six characters from 0-9+A-F (will accept both caps)</p>
       <div className="rounded-md shadow-sm -space-y-px">
         <div>
-          <label htmlFor="rgb" className="sr-only">Red Color</label>
+          <label htmlFor="rgb" className="sr-only">HEX RGB Color</label>
           <input id="rgb" name="rgb" type="text"  required={true} className="input input-start" placeholder="Hex Value" pattern="^#+([a-fA-F0-9]{6})$" maxLength={7}  onKeyDown={handleKeyDown} />
         </div>
       <div>
