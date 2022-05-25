@@ -32,10 +32,12 @@ $maxW: 28rem;
   max-width: $maxW;
   background-color: rgba(17, 24, 39, 1);
   border-radius: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .Container > * + * {
   margin-top: 2rem;
-  margin-bottom: 2rem;
+  // margin-bottom: 2rem;
 }
 
