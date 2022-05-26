@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <div className="Container">
 
-      <Hero />
+      <Hero title="Color Saver" lead="CREATE COLOR OF YOUR DREAMS" />
       <FormColors/>
       </div>
     </div>
