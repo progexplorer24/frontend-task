@@ -1,0 +1,59 @@
+$content: attr(data-content);
+$gradient-1-start: #007CF0;
+$gradient-1-end: #00DFD8;
+$gradient-2-start: #7928CA;
+$gradient-2-end: #FF0080;
+$gradient-3-start: #FF4D4D;
+$gradient-3-end: #F9CB28;
+
+$gradient-stops-1: $gradient-1-start,$gradient-1-end;
+$gradient-stops-2: $gradient-2-start,$gradient-2-end;
+$gradient-stops-3: $gradient-3-start,$gradient-3-end;
+
+@keyframes gradient-foreground-1 {
+  from {opacity: 1;}
+  25% {opacity: 0;}
+  35% {opacity: 1; background-image: linear-gradient(to bottom right, $gradient-stops-2);}
+  55% {opacity: 0;}
+  65% {opacity: 1; background-image: linear-gradient(to bottom right, $gradient-stops-3);}
+  85% {opacity: 0;}
+  to {opacity: 1; background-image: linear-gradient(to bottom right, $gradient-stops-1);}
+}
+
+.Title {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  text-align: center;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 1);
+}
+
+.colorful-wrapper {
+  display: block;
+  position: relative;
+}
+
+.colorful-wrapper::before {
+  content: $content;
+  text-align: center;
+  background-clip: text;
+  color: rgb(255, 255, 255, 1);
+  padding-left: .5rem;
+  padding-right: .5rem;
+  width: 100%;
+  display: block;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.colorful-content {
+  color: transparent;
+  padding-left: .5rem;
+  padding-right: .5rem;
+  background-clip: text;
+  background-image: linear-gradient(to bottom right, $gradient-stops-1);
+  animation: gradient-foreground-1 12s ease 0s infinite normal none running;
+}
