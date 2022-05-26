@@ -1,119 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import FormSubmit from "./FormSubmit"
 import './FormColors.scss';
-interface FormColorsProps {
-  children?: React.ReactNode
-}
-
-type ReturnType<T> = [
-  T,
-  React.Dispatch<React.SetStateAction<T>>
-]
-// INFO: This goes to separate file
-const hexToRgb = (hex:string): number[] => {
-  const replaceResult = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
-             ,(m, r, g, b) => '#' + r + r + g + g + b + b)
-  const substring = replaceResult.substring(1).match(/.{2}/g)
-  const result = substring === null ? [] : substring.map((x: string) => parseInt(x, 16))
- return result
-}
-
-const rgbToHex = (r: number, g: number, b: number) => '#' + [r, g, b].map(x => {
-  const hex = x.toString(16)
-  return hex.length === 1 ? '0' + hex : hex
-}).join('')
-
-const rgbToHsl = (r: number, g: number, b: number) => {
-  r /= 255;
-  g /= 255;
-  b /= 255;
-  const l = Math.max(r, g, b);
-  const s = l - Math.min(r, g, b);
-  const h = s
-    ? l === r
-      ? (g - b) / s
-      : l === g
-      ? 2 + (b - r) / s
-      : 4 + (r - g) / s
-    : 0;
-  return [
-    60 * h < 0 ? 60 * h + 360 : 60 * h,
-    100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
-    (100 * (2 * l - s)) / 2,
-  ];
-};
-
-const sortColorsArray = (array: ColorParsed[]) => array.sort(function(a, b) {
-  const colorA = a.color
-  const colorB = b.color
-  if (colorA[0] === colorB[0]) {
-    if (colorA[1] === colorB[1]) {
-      return colorB[1] - colorA[1];
-    } else {
-      return colorB[2] - colorA[2]
-    }
-  } else {
-    return colorB[0] - colorA[0];
-  }
-});
-type ColorObject = {
-  color: string,
-  isRemovable: boolean
-}
-
-type ColorParsed = {
-  color: number[],
-  isRemovable: boolean
-}
-
-const predefinedColorList: ColorObject[] = [
-{color: "#F87171", isRemovable: false}, 
-{color: "#FB923C", isRemovable: false},  
-{color: "#F59E0B", isRemovable: false}, 
-{color: "#14B8A6", isRemovable: false}, 
-{color: "#0369A1", isRemovable: false},
-{color: "#1D4ED8", isRemovable: false},
-{color: "#312E81", isRemovable: false},
-{color: "#F5F3FF", isRemovable: false},
-{color: "#C084FC", isRemovable: false},
-{color: "#A21CAF", isRemovable: false},
-{color: "#F0ABFC", isRemovable: false},
-{color: "#DB2777", isRemovable: false},
-{color: "#F43F5E", isRemovable: false},
-{color: "#FDE68A", isRemovable: false},
-]
-
-const parsedColorList: ColorParsed[] = predefinedColorList.map(el => {
-  return {
-    color: hexToRgb(el.color),
-    isRemovable: el.isRemovable
-  }
-})
-const sortedParsedColors = sortColorsArray(parsedColorList)
-
-const useLocalStorage = (key: string, initialValue: string): ReturnType<ColorParsed[]> => {
-  const initialArray = initialValue === '' ? sortedParsedColors : initialValue
-  const [state, setState] = useState<ColorParsed[]>(() => {
-    try {
-      const value = localStorage.getItem(key)
-      return value ? JSON.parse(value) : initialArray
-    } catch (error) {
-      return initialArray;
-    }
-  });
-
-  useEffect(() => {
-    if(state) {
-      try {
-        localStorage.setItem(key, JSON.stringify(state))
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  }, [state, key])
-
-  return [state, setState]
-}
+import { hexToRgb, rgbToHex, rgbToHsl, sortColorsArray } from '../utils/helpers';
+import {ColorParsed} from "../utils/predefined-colors"
+import {useLocalStorage} from "../hooks/useLocalStorage"
+interface FormColorsProps {}
 
 type RemovedColors = {
   red: ColorParsed[],
@@ -122,9 +13,7 @@ type RemovedColors = {
   saturation: ColorParsed[]
 }
 
-
-
-const FormColors: FC<FormColorsProps> = ({ children }) => {
+const FormColors: FC<FormColorsProps> = () => {
   const [colors, setColors] = useLocalStorage('colors', localStorage.getItem('colors') || '')
   const [filteredColors, setFilteredColors] = useState(colors)
   const [removedColors, setRemovedColors] = useState<RemovedColors>({
