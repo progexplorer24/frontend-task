@@ -68,7 +68,7 @@ const FormColors: FC<FormColorsProps> = () => {
       </div>
       </div>
     </form>
-    <FilterForm setColors={setColors} filteredColors={filteredColors} setFilteredColors={setFilteredColors} />
+    <FilterForm setColors={setColors} colors={colors} filteredColors={filteredColors} setFilteredColors={setFilteredColors} />
     </>
   );
 };
