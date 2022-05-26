@@ -1,14 +1,23 @@
-import React, { FC } from 'react';
+import React from 'react';
 import ColorfulTitle from "./ColorfulTitle"
 import Lead from "./Lead"
 import './Hero.scss';
-interface FormSubmitProps {
+interface Props {
   title: string,
   lead: string
 }
 
-const FormSubmit: FC<FormSubmitProps> = ({title, lead}) => {
-  return (
+type MyState = {};
+
+export default class Hero extends React.Component<Props, MyState> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+
+    };
+  }
+  render() {
+    return (
     <header>
      
       <svg xmlns="http://www.w3.org/2000/svg" className="svg" viewBox="0 0 20 20" fill="currentColor">
@@ -16,11 +25,9 @@ const FormSubmit: FC<FormSubmitProps> = ({title, lead}) => {
       </svg>
 
      
-    <ColorfulTitle>{title}</ColorfulTitle>
-    <Lead>{lead}</Lead>
+    <ColorfulTitle>{this.props.title}</ColorfulTitle>
+    <Lead>{this.props.lead}</Lead>
     </header>
-  );
-};
-
-
-export default FormSubmit;
+    );
+  }
+}
